@@ -16,14 +16,16 @@ def clean_data():
     # Eliminar primera columna
     df.drop(df.columns[0], axis=1, inplace=True)
 
+    # Reemplazar todos los espacios en blanco y guiones medios en las columnas por guiones bajos
+    df[['barrio', 'idea_negocio', 'línea_credito']] = df[['barrio', 'idea_negocio', 'línea_credito']].replace(['_', '-'], ' ', regex=True)  
+
     # Convertir todas las cadenas de texto a minúsculas en todas las columnas del dataframe que sean de tipo object
     df = df.apply(lambda x: x.str.lower() if x.dtype == "object" else x)
 
     # Convertir la columna comuna_ciudadano de tipo float a tipo int
     df["comuna_ciudadano"] = df["comuna_ciudadano"].astype("Int64")
 
-    # Eliminar caracteres como $ y , en la columna monto_del_credito
-    # Eliminar los caracteres después del punto en la columna monto_del_credito
+    # Eliminar caracteres como $ y , en la columna monto_del_credito. Eliminar los caracteres después del punto en la columna monto_del_credito
     # Convertir la columna monto_del_credito de tipo object a tipo int
     df["monto_del_credito"] = df["monto_del_credito"].str.replace("$", "").str.replace(",", "").str.split(".").str[0].astype(int)
 
@@ -41,16 +43,9 @@ def clean_data():
     # Eliminar filas duplicadas
     df = df.drop_duplicates()
 
-    # En las columnas de tipo int o float, reemplazar los valores faltantes por el promedio de la columna
-    for col in df.columns:
-        if df[col].dtype == "int64" or df[col].dtype == "float64":
-            df[col] = df[col].fillna(df[col].mean())
+    # Eliminar filas con datos faltantes
+    df = df.dropna()    
 
-    # En las columnas de tipo object, reemplazar los valores faltantes por la moda de la columna
-    for col in df.columns:
-        if df[col].dtype == "object":
-            df[col] = df[col].fillna(df[col].mode()[0])
-    
     return df
 
 # print(clean_data())

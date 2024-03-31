@@ -17,7 +17,7 @@ def clean_data():
     df.drop(df.columns[0], axis=1, inplace=True)
 
     # Reemplazar todos los espacios en blanco y guiones medios en las columnas por guiones bajos
-    df[['barrio', 'idea_negocio', 'línea_credito']] = df[['barrio', 'idea_negocio', 'línea_credito']].replace(['_', '-'], ' ', regex=True)  
+    df[["barrio", "idea_negocio", "línea_credito"]] = df[["barrio", "idea_negocio", "línea_credito"]].replace(["_", "-"], ' ', regex=True).replace(". ", "", regex=True) 
 
     # Convertir todas las cadenas de texto a minúsculas en todas las columnas del dataframe que sean de tipo object
     df = df.apply(lambda x: x.str.lower() if x.dtype == "object" else x)
@@ -49,4 +49,3 @@ def clean_data():
     return df
 
 # print(clean_data())
-# print(clean_data().barrio.value_counts().to_list())
